@@ -1,0 +1,34 @@
+# Use official Python image as base
+FROM python:3.13-slim
+
+# Set working directory in the container
+WORKDIR /app
+
+# Copy Poetry files first to leverage caching
+COPY ../pyproject.toml poetry.lock ./
+
+# Install Poetry
+RUN pip install --no-cache-dir poetry
+
+# Tell Poetry to install into system environment (not a virtualenv)
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-root --no-interaction --no-ansi
+
+COPY ../src ./src
+COPY ../pyproject.toml ./pyproject.toml
+COPY ../poetry.lock ./poetry.lock
+COPY ../.venv   ./.venv
+COPY ../.env    ./.env
+
+
+# Expose port 8080
+EXPOSE 5000
+
+# Set environment variables for Flask
+ENV PYTHONUNBUFFERED=1
+ENV FLASK_APP=src/AuthenticationServer.py
+ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_RUN_PORT=5000
+
+# Run the Flask app
+CMD ["flask", "run"]
