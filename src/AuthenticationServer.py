@@ -36,7 +36,7 @@ google = oauth.register(
 
 @app.route("/")
 def index():
-    return {"healthCheck": True}
+    return {"healthCheck": True, "MAIN_URL": MAIN_URL}
 
 
 @app.route("/login")
