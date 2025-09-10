@@ -6,6 +6,13 @@ from flask import Flask, jsonify, redirect, request, session, url_for
 from flask_cors import CORS
 from authlib.integrations.flask_client import OAuth
 
+from dotenv import load_dotenv
+load_dotenv()
+
+
+
+MAIN_URL = os.getenv("MAIN_URL")
+
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "supersecretkey")
 
@@ -51,7 +58,7 @@ def auth_callback():
     }
     jwt_token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
-    return redirect(f"http://localhost:5173/account?token={jwt_token}")
+    return redirect(f"{MAIN_URL}/account?token={jwt_token}")
 
 
 @app.route("/validate", methods=["POST"])
