@@ -1,5 +1,7 @@
 # auth_server.py
 import os
+import urllib
+
 import jwt
 import datetime
 from flask import Flask, jsonify, redirect, request, session, url_for
@@ -41,7 +43,9 @@ def index():
 
 @app.route("/login")
 def login():
-    redirect_uri = url_for("auth_callback", _external=True)
+    # redirect_uri = url_for("auth_callback", _external=True)
+    redirect_uri = f"{MAIN_URL}/auth/callback"
+
     print(redirect_uri)
     return google.authorize_redirect(redirect_uri)
 
